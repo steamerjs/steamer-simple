@@ -1,6 +1,6 @@
 {
   "name": "steamer-simple",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "simple-webpack-boilerplate",
   "main": "./.steamer/steamer-simple.js",
   "scripts": {
@@ -32,7 +32,6 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "ak-webpack-plugin": "^1.0.0",
     "autoprefixer": "^6.5.4",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",

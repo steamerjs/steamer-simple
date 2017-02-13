@@ -1,6 +1,6 @@
 {
   "name": "steamer-simple",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "simple-webpack-boilerplate",
   "main": "./.steamer/steamer-simple.js",
   "scripts": {

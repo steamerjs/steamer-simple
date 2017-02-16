@@ -53,6 +53,12 @@ var devConfig = {
                 // include: [path.resolve(configWebpack.path.src), 'node_modules'],
             },
             {
+                test: /\.styl$/,
+                loader: "happypack/loader?id=stylHappy",         
+                //ExtractTextPlugin.extract("style-loader", "css-loader!stylus-loader"),
+                // include: [path.resolve(configWebpack.path.src), 'node_modules'],
+            },
+            {
                 test: /\.html$/,
                 loader: 'html-loader'
             },
@@ -84,7 +90,7 @@ var devConfig = {
             path.resolve(configWebpack.path.src)
         ],
         moduledirectories:['node_modules', configWebpack.path.src],
-        extensions: ["", ".js", ".jsx", ".es6", "css", "scss", "less", "png", "jpg", "jpeg", "ico"],
+        extensions: ["", ".js", ".jsx", ".es6", "css", "scss", "less", ".styl", "png", "jpg", "jpeg", "ico", ".ejs"],
         alias: {
             'utils': path.join(configWebpack.path.src, '/js/common/utils'),
             'sutils': 'steamer-browserutils/index',
@@ -106,6 +112,11 @@ var devConfig = {
             id: 'lessHappy',
             verbose: false,
             loaders: ['style!css?localIdentName=[name]-[local]-[hash:base64:5]!postcss!less?root=' + path.resolve('src')],
+        }),
+        new HappyPack({
+            id: 'stylHappy',
+            verbose: false,
+            loaders: ['style!css?localIdentName=[name]-[local]-[hash:base64:5]!postcss!stylus'],
         }),
         new HappyPack({
             id: 'jsHappy',

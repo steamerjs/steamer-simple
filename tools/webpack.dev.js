@@ -59,6 +59,14 @@ var devConfig = {
                 // include: [path.resolve(configWebpack.path.src), 'node_modules'],
             },
             {
+                test: /\.ejs$/, 
+                loader: 'ejs-compiled?htmlmin'
+            },
+            {
+                test: /\.jade$/, 
+                loader: 'jade'
+            },
+            {
                 test: /\.html$/,
                 loader: 'html-loader'
             },
@@ -78,6 +86,12 @@ var devConfig = {
         noParse: [
             
         ]
+    },
+    'ejs-compiled-loader': {
+        'htmlmin': true, // or enable here  
+        'htmlminOptions': {
+            removeComments: true
+        }
     },
     postcss: function(webpack) { 
         return [

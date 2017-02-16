@@ -1,4 +1,5 @@
 import "./index.less";
 import "./index.styl";
 
-$('#pages').text("hello world!!");
+const tmpl = require('./toast.ejs');
+$('#pages').html(tmpl({text: 'hello big uncle!'}));

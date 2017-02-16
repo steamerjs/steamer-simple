@@ -68,6 +68,11 @@ var prodConfig = {
                 // include: path.resolve(configWebpack.path.src)
             },
             {
+                test: /\.styl$/,
+                loader: ExtractTextPlugin.extract('style', 'css?-autoprefixer&localIdentName=[name]-[local]-[hash:base64:5]!postcss!stylus'),
+                // include: [path.resolve(configWebpack.path.src), 'node_modules'],
+            },
+            {
                 test: /\.html$/,
                 loader: 'html-loader'
             },
@@ -101,7 +106,7 @@ var prodConfig = {
             path.resolve(configWebpack.path.src)
         ],
         moduledirectories:['node_modules', configWebpack.path.src],
-        extensions: ["", ".js", ".jsx", ".es6", "css", "scss", "less", "png", "jpg", "jpeg", "ico"],
+        extensions: ["", ".js", ".jsx", ".es6", "css", "scss", "less", ".styl", "png", "jpg", "jpeg", "ico", ".ejs"],
         alias: {
         	'utils': path.join(configWebpack.path.src, '/js/common/utils'),
             'sutils': 'steamer-browserutils/index',
@@ -147,13 +152,13 @@ var prodConfig = {
         //         warnings: false
         //     }
         // }),
-        // new UglifyJsParallelPlugin({
-        //     workers: os.cpus().length, // usually having as many workers as cpu cores gives good results 
-        //     // other uglify options 
-        //     compress: {
-        //         warnings: false,
-        //     },
-        // }),
+        new UglifyJsParallelPlugin({
+            workers: os.cpus().length, // usually having as many workers as cpu cores gives good results 
+            // other uglify options 
+            compress: {
+                warnings: false,
+            },
+        }),
         new WebpackMd5Hash(),
         new webpack.NoErrorsPlugin(),
     ],

@@ -32,30 +32,8 @@ var prodConfig = {
             { 
                 test: /\.js$/,
                  loader: 'happypack/loader?id=jsHappy',
-                // loader: 'babel',
-                // query: {
-                //     cacheDirectory: './.webpack_cache/',
-                //     plugins: ['transform-decorators-legacy'],
-                //     presets: [
-                //         'es2015-loose', 
-                //         'react',
-                //     ]
-                // },
                 exclude: /node_modules/,
             },
-            // { 
-            //     test: /\.js$/,
-            //     loader: 'babel',
-            //     query: {
-            //         // cacheDirectory: './.webpack_cache/',
-            //         plugins: ['transform-decorators-legacy'],
-            //         presets: [
-            //             'es2015-loose', 
-            //             'react',
-            //         ]
-            //     },
-            //     exclude: /node_modules/,
-            // },
             {
                 test: /\.css$/,
                 // 单独抽出样式文件
@@ -64,13 +42,11 @@ var prodConfig = {
             },
             {
                 test: /\.less$/,
-                loader: ExtractTextPlugin.extract('style', 'css?-autoprefixer&localIdentName=[name]-[local]-[hash:base64:5]!postcss!less?root=' + path.resolve('src')),
-                // include: path.resolve(configWebpack.path.src)
+                loader: ExtractTextPlugin.extract('style-loader!css-loader?-autoprefixer&localIdentName=[name]-[local]-[hash:base64:5]!postcss-loader!less-loader?root=' + path.resolve('src')),
             },
             {
                 test: /\.styl$/,
-                loader: ExtractTextPlugin.extract('style', 'css?-autoprefixer&localIdentName=[name]-[local]-[hash:base64:5]!postcss!stylus'),
-                // include: [path.resolve(configWebpack.path.src), 'node_modules'],
+                loader: ExtractTextPlugin.extract('style-loader!css-loader?-autoprefixer&localIdentName=[name]-[local]-[hash:base64:5]!postcss-loader!stylus-loader'),
             },
             {
                 test: /\.ejs$/, 
@@ -79,6 +55,10 @@ var prodConfig = {
             {
                 test: /\.jade$/, 
                 loader: 'jade'
+            },
+            { 
+                test: /\.handlebars$/, 
+                loader: "handlebars-loader" 
             },
             {
                 test: /\.html$/,
@@ -108,12 +88,6 @@ var prodConfig = {
         'htmlminOptions': {
             removeComments: true
         }
-    },
-    postcss: function(webpack) { 
-        return [
-            PostcssImport(),
-            Autoprefixer() 
-        ]
     },
     resolve: {
     	root: [

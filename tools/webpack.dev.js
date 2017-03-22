@@ -13,8 +13,7 @@ var HtmlResWebpackPlugin = require('html-res-webpack-plugin'),
     CopyWebpackPlugin = require("copy-webpack-plugin-hash"),
     HappyPack = require('happypack'),
     SpritesmithPlugin = require('webpack-spritesmith'),
-    PostcssImport = require('postcss-import'),
-    Autoprefixer = require('autoprefixer');
+    Nib = require('nib');
 
 var devConfig = {
     entry: configWebpack.entry,
@@ -29,34 +28,15 @@ var devConfig = {
             { 
                 test: /\.js$/,
                 loader: 'happypack/loader?id=jsHappy',
-                // loader: 'babel',
-                // query: {
-                //     cacheDirectory: './.webpack_cache/',
-                //     plugins: ['transform-decorators-legacy'],
-                //     presets: [
-                //         'es2015-loose', 
-                //         'react',
-                //     ]
-                // },
                 exclude: /node_modules/,
             },
-            // {
-            //     test: /\.css$/,
-            //     // 单独抽出样式文件
-            //     loader: ExtractTextPlugin.extract("style-loader", "css-loader"),
-            //     include: path.resolve(configWebpack.path.src)
-            // },
             {
                 test: /\.less$/,
-                loader: "happypack/loader?id=lessHappy",         
-                //ExtractTextPlugin.extract("style-loader", "css-loader!less-loader"),
-                // include: [path.resolve(configWebpack.path.src), 'node_modules'],
+                loader: "happypack/loader?id=lessHappy",  
             },
             {
                 test: /\.styl$/,
-                loader: "happypack/loader?id=stylHappy",         
-                //ExtractTextPlugin.extract("style-loader", "css-loader!stylus-loader"),
-                // include: [path.resolve(configWebpack.path.src), 'node_modules'],
+                loader: "happypack/loader?id=stylHappy", 
             },
             {
                 test: /\.ejs$/, 
@@ -64,7 +44,11 @@ var devConfig = {
             },
             {
                 test: /\.jade$/, 
-                loader: 'jade'
+                loader: 'jade-loader'
+            },
+            { 
+                test: /\.handlebars$/, 
+                loader: "handlebars-loader" 
             },
             {
                 test: /\.html$/,
@@ -88,16 +72,10 @@ var devConfig = {
         ]
     },
     'ejs-compiled-loader': {
-        'htmlmin': true, // or enable here  
+        'htmlmin': false, // or enable here  
         'htmlminOptions': {
             removeComments: true
         }
-    },
-    postcss: function(webpack) { 
-        return [
-            PostcssImport(),
-            Autoprefixer() 
-        ]
     },
     resolve: {
         root: [
@@ -108,7 +86,6 @@ var devConfig = {
         alias: {
             'utils': path.join(configWebpack.path.src, '/js/common/utils'),
             'sutils': 'steamer-browserutils/index',
-            'net': 'steamer-net/index',
         }
     },
     plugins: [
@@ -125,12 +102,12 @@ var devConfig = {
         new HappyPack({
             id: 'lessHappy',
             verbose: false,
-            loaders: ['style!css?localIdentName=[name]-[local]-[hash:base64:5]!postcss!less?root=' + path.resolve('src')],
+            loaders: ['style-loader!css-loader?localIdentName=[name]-[local]-[hash:base64:5]!postcss-loader!less-loader?root=' + path.resolve('src')],
         }),
         new HappyPack({
             id: 'stylHappy',
             verbose: false,
-            loaders: ['style!css?localIdentName=[name]-[local]-[hash:base64:5]!postcss!stylus'],
+            loaders: ['style-loader!css-loader?localIdentName=[name]-[local]-[hash:base64:5]!postcss-loader!stylus-loader'],
         }),
         new HappyPack({
             id: 'jsHappy',

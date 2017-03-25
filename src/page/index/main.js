@@ -1,4 +1,4 @@
-if ("production" !== process.env.NODE_ENV) {
+if ("__PROD__" !== process.env.NODE_ENV) {
 	// use it for hot reload
 	module.exports = require('./root/Root.dev');
 }

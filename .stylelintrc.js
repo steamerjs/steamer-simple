@@ -13,6 +13,7 @@ module.exports = {
 	        	"inside-single-line-block",
 	      	],
 	    }],
+	    "rule-empty-line-before": null,
 	    "rule-nested-empty-line-before": null,
 	    "no-missing-end-of-source-newline": null,
 	    "no-eol-whitespace": null,

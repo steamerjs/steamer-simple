@@ -1,3 +1,4 @@
+'use strict';
 
 var path = require('path'),
 	os = require('os'),
@@ -123,14 +124,10 @@ function getModule() {
 function getResolve() {
 
 	if (isProduction) {
-		return {
-
-		};
+		return {};
 	}
 	else {
-		return {
-
-		}
+		return {}
 	}
 }
 
@@ -141,7 +138,7 @@ function getPlugins() {
             filename:  (getPath) => {
               return getPath('css/' + configWebpack.contenthashName + '.css').replace('css/js', 'css');
             },
-            allChunks: true,
+            allChunks: false,
             disable: isProduction ? false : true,
         }),
         new HappyPack({
@@ -158,40 +155,6 @@ function getPlugins() {
             }],
         })
 	];
-
-	if (configWebpack.clean) {
-		plugins.push(new Clean([isProduction ? 'dist' : 'dev'], {root: path.resolve()}));
-	}
-
-
-	if (isProduction) {
-		plugins.push(new webpack.DefinePlugin({
-            "process.env": {
-                NODE_ENV: JSON.stringify(config.env)
-            }
-        }));
-        plugins.push(new WebpackMd5Hash());
-
-       	if (configWebpack.compress) {
-       		plugins.push(new UglifyJsParallelPlugin({
-	            workers: os.cpus().length, // usually having as many workers as cpu cores gives good results 
-	            // other uglify options 
-	            compress: {
-	                warnings: false,
-	            },
-	        }));
-       	}
-	}
-	else {
-		plugins.push(new webpack.HotModuleReplacementPlugin());
-	}
-
-	configWebpack.static.forEach((item) => {
-        plugins.push(new CopyWebpackPlugin([{
-            from: item.src,
-            to: (item.dist || item.src) + (item.hash ? configWebpack.hashName : "[name]") + '.[ext]'
-        }]));
-	});
 	
 	configWebpack.html.forEach(function(page, key) {
 		plugins.push(new HtmlResWebpackPlugin({
@@ -199,7 +162,6 @@ function getPlugins() {
 	        filename: page.key + ".html",
 	        template: page.path,
 	        favicon: "src/favicon.ico",
-	        // chunks: configWebpack.htmlres.dev[page],
 	        htmlMinify: null,
 	        entryLog: !key ? true : false,
 	        templateContent: function(tpl) {
@@ -207,29 +169,6 @@ function getPlugins() {
 	        }
 		}))
 	}); 
-
-	configWebpack.sprites.forEach(function(sprites) {
-		plugins.push(new SpritesmithPlugin({
-			src: {
-	            cwd: sprites.path,
-	            glob: '*.png'
-	        },
-	        target: {
-	            image: path.join(configWebpack.path.src, "css/sprites/" + sprites.key + ".png"),
-	            css: path.join(configWebpack.path.src, "css/sprites/" + sprites.key + ".less")
-	        },
-	        spritesmithOptions: {
-	            padding: 10
-	        },
-	        customTemplates: {
-	            'less': path.join(__dirname, '../tools/', './sprite-template/less.template.mobile.handlebars'),
-	        },
-	        apiOptions: {
-	            cssImageRef: sprites.key + ".png"
-	        }
-		}));
-	});
-
 
 	return plugins;
 }
@@ -254,7 +193,6 @@ var webpackConfig = {
 	resolve: getResolve(),
 	externals: getExternals(),
 	plugins: getPlugins(),
-	
 };
 
 var otherConfig = getOtherOptions();

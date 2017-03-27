@@ -47,6 +47,10 @@ var config = {
         sprites: utils.getSpriteEntry({
             srcPath: spritePath
         }),
+        // 合图，mobile = 2倍图，pc = 1倍图
+        spriteMode: "mobile",
+        // less, stylus
+        spriteStyle: "less",
 
         // 项目路径
         path: {
@@ -85,7 +89,7 @@ var config = {
                 hash: true,
             }
         ],
-
+        
     },
 
     // 开发服务器配置

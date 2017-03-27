@@ -4,7 +4,7 @@ const path = require('path'),
       utils = require('steamer-webpack-utils'),
       webpack = require('webpack'),
       webpackMerge = require('webpack-merge'),
-      customConfig = require('../config/webpack.custom');
+      customConfig = require('../config/webpack.config');
 
 var config = require('../config/project'),
     configWebpack = config.webpack;
@@ -42,8 +42,8 @@ var baseConfig = {
                         loader: 'css-loader',
                         options: {
                             localIdentName: '[name]-[local]-[hash:base64:5]',
-                            root: configWebpack.path.src
-                            // module: true
+                            root: configWebpack.path.src,
+                            module: configWebpack.cssModule
                         }
                     },
                     { loader: 'postcss-loader' },
@@ -57,14 +57,17 @@ var baseConfig = {
                         loader: 'css-loader',
                         options: {
                             localIdentName: '[name]-[local]-[hash:base64:5]',
-                            // module: true
+                            module: configWebpack.cssModule
                         }
                     },
                     { loader: 'postcss-loader' },
                     {
                         loader:  'less-loader',
                         options: {
-                            root: configWebpack.path.src
+                            paths: [
+                                configWebpack.path.src,
+                                "node_modules"
+                            ]
                         }
                     }
                 ]
@@ -77,7 +80,7 @@ var baseConfig = {
                         loader: 'css-loader',
                         options: {
                             localIdentName: '[name]-[local]-[hash:base64:5]',
-                            // module: true
+                            module: configWebpack.cssModule
                         }
                     },
                     { loader: 'postcss-loader' },
@@ -103,7 +106,6 @@ var baseConfig = {
                     limit: 1000,
                     name: "img/[path]/" + configWebpack.hashName + ".[ext]"
                 },
-                include: configWebpack.path.src
             },
             {
                 test: /\.ico$/,
@@ -111,7 +113,6 @@ var baseConfig = {
                 options: {
                     name: "[name].[ext]"
                 },
-                include: configWebpack.path.src
             },
         ],
     },
@@ -120,7 +121,7 @@ var baseConfig = {
             configWebpack.path.src,
             "node_modules"
         ],
-        extensions: [".js", ".jsx", ".css", ".scss", ".less", ".styl", ".png", ".jpg", ".jpeg", ".ico", ".ejs", ".pug", ".handlebars"],
+        extensions: [".js", ".jsx", ".css", ".scss", ".less", ".styl", ".png", ".jpg", ".jpeg", ".ico", ".ejs", ".pug", ".handlebars", "swf"],
         alias: {
             'utils': path.join(configWebpack.path.src, '/js/common/utils'),
             'sutils': 'steamer-browserutils/index',
@@ -128,12 +129,6 @@ var baseConfig = {
     },
     plugins: [
         new webpack.NoEmitOnErrorsPlugin(),
-        new CopyWebpackPlugin([
-            {
-                from: 'libs/',
-                to: 'libs/' + configWebpack.hashName + '.[ext]'
-            }
-        ]),
     ],
 };
 

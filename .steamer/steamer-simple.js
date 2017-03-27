@@ -7,6 +7,7 @@ module.exports = {
         ".eslintrc.js",
         ".eslintignore",
         ".stylelintrc.js",
+        "postcss.config.js",
         ".gitignore",
         ".babelrc",
     ],

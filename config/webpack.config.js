@@ -25,42 +25,88 @@ function getOutput() {
 }
 
 function getModule() {
+	var module = {}; 
 	if (isProduction) {
-		return {
+		module = {
 			rules: [
 				{ 
 	                test: /\.js$/,
 	                loader: 'happypack/loader?id=1',
 	                exclude: /node_modules/,
 	            },
-				{
-	                test: /\.css$/,
-	                // 单独抽出样式文件
-	                loader: ExtractTextPlugin.extract({
-	                	fallback: 'style-loader', 
-	                	use: 'css-loader!postcss-loader'
-	                }),
-	                include: path.resolve(configWebpack.path.src)
-	            },
-	            {
-	                test: /\.less$/,
-	                loader: ExtractTextPlugin.extract({
-	                	fallback: 'style-loader', 
-	                	use: 'css-loader?-autoprefixer&localIdentName=[name]-[local]-[hash:base64:5]!postcss-loader!less-loader?root=' + path.resolve('src')
-	                }),
-	            },
-	            {
-	                test: /\.styl$/,
-	                loader: ExtractTextPlugin.extract({
-	                	fallback: 'style-loader', 
-	                	use: 'css-loader?-autoprefixer&localIdentName=[name]-[local]-[hash:base64:5]!postcss-loader!stylus-loader'
-	                }),
-	            },
 			]
+		};
+
+		var cssRules = [
+			{
+                test: /\.css$/,
+                // 单独抽出样式文件
+                loader: ExtractTextPlugin.extract({
+                	fallback: 'style-loader', 
+                	use: [
+                		{
+	                        loader: 'css-loader',
+	                        options: {
+	                            localIdentName: '[name]-[local]-[hash:base64:5]',
+	                            root: configWebpack.path.src,
+	                            module: configWebpack.cssModule
+	                        }
+	                    },
+	                    { loader: 'postcss-loader' },
+                	]
+                }),
+                include: path.resolve(configWebpack.path.src)
+            },
+            {
+                test: /\.less$/,
+                loader: ExtractTextPlugin.extract({
+                	fallback: 'style-loader', 
+                	use: [
+                		{
+	                        loader: 'css-loader',
+	                        options: {
+	                            localIdentName: '[name]-[local]-[hash:base64:5]',
+	                            module: configWebpack.cssModule
+	                        }
+	                    },
+	                    { loader: 'postcss-loader' },
+	                    {
+	                        loader:  'less-loader',
+	                        options: {
+	                            paths: [
+	                            	configWebpack.path.src,
+	                            	"node_modules"
+	                            ]
+	                        }
+	                    }
+                	]
+                }),
+            },
+            {
+                test: /\.styl$/,
+                loader: ExtractTextPlugin.extract({
+                	fallback: 'style-loader', 
+                	use: [
+                		{
+	                        loader: 'css-loader',
+	                        options: {
+	                            localIdentName: '[name]-[local]-[hash:base64:5]',
+	                            // module: true
+	                        }
+	                    },
+	                    { loader: 'postcss-loader' },
+	                    { loader:  'stylus-loader' },
+                	]
+                }),
+            },
+		];
+
+		if (configWebpack.extractCss) {
+			module.rules = module.rules.concat(cssRules);
 		}
 	}
 	else {
-		return {
+		module = {
 			rules: [
 				{ 
 	                test: /\.js$/,
@@ -70,6 +116,8 @@ function getModule() {
 			]
 		};
 	}
+
+	return module;
 }
 
 function getResolve() {
@@ -89,7 +137,6 @@ function getResolve() {
 function getPlugins() {
 
 	var plugins = [
-		new Clean([isProduction ? 'dist' : 'dev'], {root: path.resolve()}),
 		new ExtractTextPlugin({
             filename:  (getPath) => {
               return getPath('css/' + configWebpack.contenthashName + '.css').replace('css/js', 'css');
@@ -112,6 +159,10 @@ function getPlugins() {
         })
 	];
 
+	if (configWebpack.clean) {
+		plugins.push(new Clean([isProduction ? 'dist' : 'dev'], {root: path.resolve()}));
+	}
+
 
 	if (isProduction) {
 		plugins.push(new webpack.DefinePlugin({
@@ -119,18 +170,28 @@ function getPlugins() {
                 NODE_ENV: JSON.stringify(config.env)
             }
         }));
-        plugins.push(new UglifyJsParallelPlugin({
-            workers: os.cpus().length, // usually having as many workers as cpu cores gives good results 
-            // other uglify options 
-            compress: {
-                warnings: false,
-            },
-        }));
         plugins.push(new WebpackMd5Hash());
+
+       	if (configWebpack.compress) {
+       		plugins.push(new UglifyJsParallelPlugin({
+	            workers: os.cpus().length, // usually having as many workers as cpu cores gives good results 
+	            // other uglify options 
+	            compress: {
+	                warnings: false,
+	            },
+	        }));
+       	}
 	}
 	else {
 		plugins.push(new webpack.HotModuleReplacementPlugin());
 	}
+
+	configWebpack.static.forEach((item) => {
+        plugins.push(new CopyWebpackPlugin([{
+            from: item.src,
+            to: (item.dist || item.src) + (item.hash ? configWebpack.hashName : "[name]") + '.[ext]'
+        }]));
+	});
 	
 	configWebpack.html.forEach(function(page, key) {
 		plugins.push(new HtmlResWebpackPlugin({
@@ -161,7 +222,7 @@ function getPlugins() {
 	            padding: 10
 	        },
 	        customTemplates: {
-	            'less': path.join(__dirname, '../tools/', './sprite-template/less.template.handlebars'),
+	            'less': path.join(__dirname, '../tools/', './sprite-template/less.template.mobile.handlebars'),
 	        },
 	        apiOptions: {
 	            cssImageRef: sprites.key + ".png"
@@ -181,16 +242,25 @@ function getExternals() {
 
 function getOtherOptions() {
 	return {
-
+		watch: isProduction ? false : true,
+		devtool: isProduction ? configWebpack.sourceMap.production : configWebpack.sourceMap.development
 	};
 }
 
 
-module.exports = {
+var webpackConfig = {
 	output: getOutput(),
 	module: getModule(),
 	resolve: getResolve(),
 	externals: getExternals(),
 	plugins: getPlugins(),
-	watch: isProduction ? false : true,
+	
 };
+
+var otherConfig = getOtherOptions();
+
+for (let key in otherConfig) {
+	webpackConfig[key] = otherConfig[key];
+}
+
+module.exports = webpackConfig;

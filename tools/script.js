@@ -12,7 +12,7 @@ var isProduction = mode === "production";
 if (mode === 'development') {
 	process.env.NODE_ENV = "development";
 
-	require('./webpack.server');
+	require('./server');
 }
 else if (mode === 'production' || mode === 'source'){
 	process.env.NODE_ENV = isProduction ? "production" : "development";

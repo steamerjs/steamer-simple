@@ -4,8 +4,7 @@ const path = require('path'),
       os = require('os'),
       utils = require('steamer-webpack-utils'),
       webpack = require('webpack'),
-      webpackMerge = require('webpack-merge'),
-      customConfig = require('../config/webpack.config');
+      webpackMerge = require('webpack-merge');
 
 var config = require('../config/project'),
     configWebpack = config.webpack,
@@ -13,9 +12,7 @@ var config = require('../config/project'),
     isProduction = env === 'production';
 
 var Clean = require('clean-webpack-plugin'),
-    ExtractTextPlugin = require("extract-text-webpack-plugin"),
     CopyWebpackPlugin = require("copy-webpack-plugin-hash"),
-    HappyPack = require('happypack'),
     SpritesmithPlugin = require('webpack-spritesmith'),
     WebpackMd5Hash = require('webpack-md5-hash'),
     UglifyJsParallelPlugin = require('webpack-uglify-parallel');
@@ -24,8 +21,8 @@ var baseConfig = {
     context: configWebpack.path.src,
     entry: configWebpack.entry,
     output: {
-        publicPath: config.webserver,
-        path: configWebpack.path.dev,
+        publicPath: isProduction ? config.cdn : config.webserver,
+        path: isProduction ? path.join(configWebpack.path.dist, "cdn") : configWebpack.path.dev,
         filename: configWebpack.chunkhashName + ".js",
         chunkFilename: "chunk/" + configWebpack.chunkhashName + ".js",
     },
@@ -42,71 +39,6 @@ var baseConfig = {
                     ]
                 },
                 exclude: /node_modules/,
-            },
-            {
-                test: /\.css$/,
-                use: [
-                    { loader: 'style-loader' },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            localIdentName: '[name]-[local]-[hash:base64:5]',
-                            root: configWebpack.path.src,
-                            module: configWebpack.cssModule
-                        }
-                    },
-                    { loader: 'postcss-loader' },
-                ]
-            },
-            {
-                test: /\.less$/,
-                use: [
-                    { loader: 'style-loader' },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            localIdentName: '[name]-[local]-[hash:base64:5]',
-                            module: configWebpack.cssModule
-                        }
-                    },
-                    { loader: 'postcss-loader' },
-                    {
-                        loader:  'less-loader',
-                        options: {
-                            paths: [
-                                configWebpack.path.src,
-                                "node_modules"
-                            ]
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.styl$/,
-                use: [
-                    { loader: 'style-loader' },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            localIdentName: '[name]-[local]-[hash:base64:5]',
-                            module: configWebpack.cssModule
-                        }
-                    },
-                    { loader: 'postcss-loader' },
-                    { loader: 'stylus-loader', }
-                ]
-            },
-            {
-                test: /\.pug$/, 
-                loader: 'pug-loader'
-            },
-            { 
-                test: /\.handlebars$/, 
-                loader: "handlebars-loader" 
-            },
-            {
-                test: /\.html$/,
-                loader: 'html-loader'
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
@@ -139,6 +71,8 @@ var baseConfig = {
     plugins: [
         new webpack.NoEmitOnErrorsPlugin(),
     ],
+    watch: isProduction ? false : true,
+    devtool: isProduction ? configWebpack.sourceMap.production : configWebpack.sourceMap.development
 };
 
 if (isProduction) {
@@ -198,11 +132,25 @@ configWebpack.sprites.forEach(function(sprites) {
     }));
 });
 
-var finalConfig = webpackMerge.smartStrategy({
+var userConfig = {
+    output: configWebpack.getOutput(),
+    module: configWebpack.getModule(),
+    resolve: configWebpack.getResolve(),
+    externals: configWebpack.getExternals(),
+    plugins: configWebpack.getPlugins(),
+};
+
+var otherConfig = configWebpack.getOtherOptions();
+
+for (let key in otherConfig) {
+    userConfig[key] = otherConfig[key];
+}
+
+var webpackConfig = webpackMerge.smartStrategy({
     "module.rules": "prepend",
     "plugins": "append"
-})(baseConfig, customConfig);
+})(baseConfig, userConfig);
 
-// console.log(JSON.stringify(finalConfig, null, 2));
+// console.log(JSON.stringify(webpackConfig, null, 2));
 
-module.exports = finalConfig;
+module.exports = webpackConfig;

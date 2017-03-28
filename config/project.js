@@ -22,11 +22,12 @@ var HtmlResWebpackPlugin = require('html-res-webpack-plugin'),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     HappyPack = require('happypack');
 
+// ========================= webpack快捷配置 =========================
+// 基本情况下，你只需要关注这里的配置
 var config = {
     // ========================= webpack环境配置 =========================
     env: __env,
 
-    // ========================= webpack快捷配置 =========================
     webpack: {
 
         // ========================= webpack路径与url =========================

@@ -85,6 +85,13 @@ var config = {
             }
         ],
 
+        // 利用DefinePlugin给应用注入变量
+        injectVar: {
+            "process.env": {
+                NODE_ENV: JSON.stringify(__env)
+            }
+        },
+
         // 文件名与哈希, hash, chunkhash, contenthash 与webpack的哈希配置对应
         hash: hash,
         chunkhash: chunkhash,
@@ -103,13 +110,13 @@ var config = {
                 'js/pindex': [path.join(configWebpack.path.src, "/page/pindex/main.jsx")],
             }
          */
-        entry: utils.getJsEntry({
+        entry: utils.filterJsFileByCmd(utils.getJsEntry({
             srcPath: path.join(srcPath, "page"), 
             fileName: "main",
             extensions: ["js", "jsx"],
             keyPrefix: "js/",
             level: 1
-        }),
+        })),
 
         // 自动扫描html，配合html-res-webpack-plugin
         /**
@@ -129,10 +136,10 @@ var config = {
                 } 
             ]
          */
-        html: utils.getHtmlEntry({
+        html: utils.filterHtmlFileByCmd(utils.getHtmlEntry({
             srcPath: path.join(srcPath, "page"),
             level: 1
-        }),
+        })),
 
         // 自动扫描合图，配合webpack-spritesmith插件
         /**

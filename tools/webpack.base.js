@@ -78,19 +78,8 @@ var baseConfig = {
     devtool: isProduction ? configWebpack.sourceMap.production : configWebpack.sourceMap.development
 };
 
-// 根据entry参数筛选入口文件
-if (npmArgv.entry) {
-    let entries = npmArgv.entry.split(",");
-    configWebpack.entry = utils.filterJsFile(configWebpack.entry, entries);
-    baseConfig.entry = configWebpack.entry;
-}
-
 if (isProduction) {
-    baseConfig.plugins.push(new webpack.DefinePlugin({
-        "process.env": {
-            NODE_ENV: JSON.stringify(config.env)
-        }
-    }));
+    baseConfig.plugins.push(new webpack.DefinePlugin(configWebpack.injectVar));
     baseConfig.plugins.push(new WebpackMd5Hash());
 
     if (configWebpack.compress) {

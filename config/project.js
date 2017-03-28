@@ -74,7 +74,7 @@ var config = {
             "html", "pug", "handlebars"
         ],
 
-        // 资源是否压缩
+        // 生产环境下资源是否压缩
         compress: true,
 
         // 不经webpack打包的资源
@@ -328,6 +328,21 @@ config.custom = {
     // 其它 webpack 配置
     getOtherOptions: function() {
         return {};
+    }
+};
+
+// ========================= webpack merge 的策略 =========================
+config.webpackMerge = {
+    // webpack-merge smartStrategy 配置
+    smartStrategyOption: {
+        "module.rules": "prepend",
+        "plugins": "append"
+    },
+
+    // 在smartStrategy merge 之前，用户可以先行对 webpack.base.js 的配置进行处理
+    mergeProcess: function(webpackBaseConfig) {
+
+        return webpackBaseConfig;
     }
 };
 

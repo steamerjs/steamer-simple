@@ -8,6 +8,7 @@ const path = require('path'),
 
 var config = require('../config/project'),
     configWebpack = config.webpack,
+    configWebpackMerge = config.webpackMerge,
     configCustom = config.custom,
     env = process.env.NODE_ENV,
     isProduction = env === 'production';
@@ -147,10 +148,11 @@ for (let key in otherConfig) {
     userConfig[key] = otherConfig[key];
 }
 
-var webpackConfig = webpackMerge.smartStrategy({
-    "module.rules": "prepend",
-    "plugins": "append"
-})(baseConfig, userConfig);
+baseConfig = configWebpackMerge.mergeProcess(baseConfig);
+
+var webpackConfig = webpackMerge.smartStrategy(
+    configWebpackMerge.smartStrategyOption
+)(baseConfig, userConfig);
 
 // console.log(JSON.stringify(webpackConfig, null, 2));
 

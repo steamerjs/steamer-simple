@@ -112,12 +112,42 @@ var config = {
         }),
 
         // 自动扫描html，配合html-res-webpack-plugin
+        /**
+            当前获取结果
+            [ 
+                { 
+                    key: 'index',
+                    path: 'path/src/page/index/index.html'
+                },
+                { 
+                    key: 'spa',
+                    path: 'path/src/page/spa/index.html'
+                },
+                { 
+                    key: 'pindex',
+                    path: 'path/src/page/pindex/index.html'
+                } 
+            ]
+         */
         html: utils.getHtmlEntry({
             srcPath: path.join(srcPath, "page"),
             level: 1
         }),
 
         // 自动扫描合图，配合webpack-spritesmith插件
+        /**
+            当前获取结果
+            [
+                { 
+                    key: 'btn',
+                    path: 'path/src/img/sprites/btn'
+                },
+                { 
+                    key: 'list',
+                    path: 'path/src/img/sprites/list'
+                } 
+            ]
+         */
         sprites: utils.getSpriteEntry({
             srcPath: spritePath
         }),

@@ -4,7 +4,8 @@ const path = require('path'),
       os = require('os'),
       utils = require('steamer-webpack-utils'),
       webpack = require('webpack'),
-      webpackMerge = require('webpack-merge');
+      webpackMerge = require('webpack-merge'),
+      npmArgv = utils.getArgvs(JSON.parse(process.env.npm_config_argv || "[]").original);
 
 var config = require('../config/project'),
     configWebpack = config.webpack,
@@ -76,6 +77,13 @@ var baseConfig = {
     watch: isProduction ? false : true,
     devtool: isProduction ? configWebpack.sourceMap.production : configWebpack.sourceMap.development
 };
+
+// 根据entry参数筛选入口文件
+if (npmArgv.entry) {
+    let entries = npmArgv.entry.split(",");
+    configWebpack.entry = utils.filterJsFile(configWebpack.entry, entries);
+    baseConfig.entry = configWebpack.entry;
+}
 
 if (isProduction) {
     baseConfig.plugins.push(new webpack.DefinePlugin({

@@ -96,7 +96,7 @@ var config = {
         // ========================= webpack entry配置 =========================
         // 根据约定，自动扫描js entry，约定是src/page/xxx/main.js 或 src/page/xxx/main.jsx
         /** 
-            当前获取结果
+            获取结果示例
             {
                 'js/index': [path.join(configWebpack.path.src, "/page/index/main.js")],
                 'js/spa': [path.join(configWebpack.path.src, "/page/spa/main.js")],
@@ -113,7 +113,7 @@ var config = {
 
         // 自动扫描html，配合html-res-webpack-plugin
         /**
-            当前获取结果
+            获取结果示例
             [ 
                 { 
                     key: 'index',
@@ -136,7 +136,7 @@ var config = {
 
         // 自动扫描合图，配合webpack-spritesmith插件
         /**
-            当前获取结果
+            获取结果示例
             [
                 { 
                     key: 'btn',

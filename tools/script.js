@@ -5,6 +5,7 @@ const utils = require('steamer-webpack-utils'),
 	  fs = require('fs');
 
 var argv = utils.getArgvs(),
+	npmArgv = utils.getArgvs(JSON.parse(process.env.npm_config_argv || "[]").original),
 	mode = argv.mode;
 
 var isProduction = mode === "production";

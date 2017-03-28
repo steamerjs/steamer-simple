@@ -8,6 +8,7 @@ const path = require('path'),
 
 var config = require('../config/project'),
     configWebpack = config.webpack,
+    configCustom = config.custom,
     env = process.env.NODE_ENV,
     isProduction = env === 'production';
 
@@ -21,7 +22,7 @@ var baseConfig = {
     context: configWebpack.path.src,
     entry: configWebpack.entry,
     output: {
-        publicPath: isProduction ? config.cdn : config.webserver,
+        publicPath: isProduction ? configWebpack.cdn : configWebpack.webserver,
         path: isProduction ? path.join(configWebpack.path.dist, "cdn") : configWebpack.path.dev,
         filename: configWebpack.chunkhashName + ".js",
         chunkFilename: "chunk/" + configWebpack.chunkhashName + ".js",
@@ -133,14 +134,14 @@ configWebpack.sprites.forEach(function(sprites) {
 });
 
 var userConfig = {
-    output: configWebpack.getOutput(),
-    module: configWebpack.getModule(),
-    resolve: configWebpack.getResolve(),
-    externals: configWebpack.getExternals(),
-    plugins: configWebpack.getPlugins(),
+    output: configCustom.getOutput(),
+    module: configCustom.getModule(),
+    resolve: configCustom.getResolve(),
+    externals: configCustom.getExternals(),
+    plugins: configCustom.getPlugins(),
 };
 
-var otherConfig = configWebpack.getOtherOptions();
+var otherConfig = configCustom.getOtherOptions();
 
 for (let key in otherConfig) {
     userConfig[key] = otherConfig[key];

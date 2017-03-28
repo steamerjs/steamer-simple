@@ -23,16 +23,58 @@ var HtmlResWebpackPlugin = require('html-res-webpack-plugin'),
     HappyPack = require('happypack');
 
 var config = {
-    // 当前环境
+    // ========================= webpack环境配置 =========================
     env: __env,
 
+    // ========================= webpack服务器及路由配置 =========================
     // 开发服务器配置
     webserver: steamerConfig.webserver,
     cdn: steamerConfig.cdn,
     port: steamerConfig.port,    // port for local server
-    route: steamerConfig.route , // http://host/news/
+    route: steamerConfig.route, // http://host/news/
 
     webpack: {
+
+        // ========================= webpack快捷配置 =========================
+        // 是否清理生成文件夹
+        clean: true,
+        // sourcemap
+        sourceMap: {
+            development: "inline-source-map",
+            production: false,
+        },
+
+        // 样式
+        style: [
+            "css", "less", "stylus"
+        ],
+        // 生产环境是否提取css
+        extractCss: true,
+        // 是否启用css模块化
+        cssModule: false,
+
+        // 合图，mobile = 2倍图，pc = 1倍图
+        spriteMode: "mobile",
+        // less, stylus
+        spriteStyle: "less",
+
+        // html模板
+        template: [
+            "html", "pug", "handlebars"
+        ],
+
+        // 资源是否压缩
+        compress: true,
+
+        // 不经webpack打包的资源
+        static: [
+            {
+                src: "libs/",
+                hash: true,
+            }
+        ],
+
+        // ========================= webpack入口entry文件 =========================
         // 根据约定，自动扫描js entry，约定是src/page/xxx/main.js 或 src/page/xxx/main.jsx
         /** 
             当前获取结果
@@ -60,11 +102,8 @@ var config = {
         sprites: utils.getSpriteEntry({
             srcPath: spritePath
         }),
-        // 合图，mobile = 2倍图，pc = 1倍图
-        spriteMode: "mobile",
-        // less, stylus
-        spriteStyle: "less",
 
+        // ========================= webpack路径与文件名 =========================
         // 项目路径
         path: {
             src: srcPath,
@@ -81,39 +120,7 @@ var config = {
         chunkhashName: isProduction ? ("[name]-" + chunkhash) : "[name]",
         contenthashName: isProduction ? ("[name]-" + contenthash) : "[name]",
 
-        // webpack其它个性化定制配置
-        // 是否清理生成文件夹
-        clean: true,
-        // sourcemap
-        sourceMap: {
-            development: "inline-source-map",
-            production: false,
-        },
-
-        // 样式
-        style: [
-            "css", "less", "stylus"
-        ],
-        // 生产环境是否提取css
-        extractCss: true,
-        // 是否启用css模块化
-        cssModule: false,
-
-        // html模板
-        template: [
-            "html", "pug", "handlebars"
-        ],
-
-        // 资源是否压缩
-        compress: true,
-        // 不经webpack打包的资源
-        static: [
-            {
-                src: "libs/",
-                hash: true,
-            }
-        ],
-
+        // ========================= webpack自定义配置 =========================
         // webpack output
         getOutput: function() {
             return {};

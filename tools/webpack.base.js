@@ -4,8 +4,7 @@ const path = require('path'),
       os = require('os'),
       utils = require('steamer-webpack-utils'),
       webpack = require('webpack'),
-      webpackMerge = require('webpack-merge'),
-      npmArgv = utils.getArgvs(JSON.parse(process.env.npm_config_argv || "[]").original);
+      webpackMerge = require('webpack-merge');
 
 var config = require('../config/project'),
     configWebpack = config.webpack,
@@ -150,7 +149,5 @@ baseConfig = configWebpackMerge.mergeProcess(baseConfig);
 var webpackConfig = webpackMerge.smartStrategy(
     configWebpackMerge.smartStrategyOption
 )(baseConfig, userConfig);
-
-// console.log(JSON.stringify(webpackConfig, null, 2));
 
 module.exports = webpackConfig;

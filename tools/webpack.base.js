@@ -66,10 +66,7 @@ var baseConfig = {
             path.join(configWebpack.path.src, "css/sprites")
         ],
         extensions: [".js", ".jsx", ".css", ".scss", ".less", ".styl", ".png", ".jpg", ".jpeg", ".ico", ".ejs", ".pug", ".handlebars", "swf"],
-        alias: {
-            'utils': path.join(configWebpack.path.src, '/js/common/utils'),
-            'sutils': 'steamer-browserutils/index',
-        }
+        alias: {}
     },
     plugins: [
         new webpack.NoEmitOnErrorsPlugin(),
@@ -169,5 +166,7 @@ baseConfig = configWebpackMerge.mergeProcess(baseConfig);
 var webpackConfig = webpackMerge.smartStrategy(
     configWebpackMerge.smartStrategyOption
 )(baseConfig, userConfig);
+
+// console.log(JSON.stringify(webpackConfig, null, 4));
 
 module.exports = webpackConfig;

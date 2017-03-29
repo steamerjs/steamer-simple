@@ -55,7 +55,7 @@ var config = {
             production: false,
         },
 
-        // 样式
+        // 支持的样式loader，css, less 或 stylus
         style: [
             "css", "less", "stylus"
         ],
@@ -64,7 +64,7 @@ var config = {
         // 是否启用css模块化
         cssModule: false,
 
-        // 合图，normal (1x) , retinaonly (2x), retina (1x & 2x), 
+        // 合图，normal (仅1倍图) , retinaonly (仅2倍图), retina (包括1倍及2倍图)
         spriteMode: "retina",
         // less, stylus
         spriteStyle: "stylus",
@@ -90,6 +90,12 @@ var config = {
             "process.env": {
                 NODE_ENV: JSON.stringify(__env)
             }
+        },
+
+        // webpack resolve.alias 包别名
+        alias: {
+            'utils': path.join(srcPath, '/js/common/utils'),
+            'sutils': 'steamer-browserutils/index',
         },
 
         // 文件名与哈希, hash, chunkhash, contenthash 与webpack的哈希配置对应
@@ -288,7 +294,9 @@ config.custom = {
 
     // webpack resolve
     getResolve: function() {
-        return {};
+        return {
+            alias: config.webpack.alias
+        };
     },
 
     // webpack plugins

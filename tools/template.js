@@ -10,8 +10,8 @@ const path = require('path'),
 var npmArgvs = utils.getNpmArgvs();
 
 
-let tpl = npmArgvs.tpl || npmArgvs.t,
-	destination = npmArgvs.path || npmArgvs.p;
+let tpl = npmArgvs.tpl || npmArgvs.t || 'index',
+	destination = npmArgvs.path || npmArgvs.p || 'index';
 
 let destFolder = path.join(configWebpack.path.src, "page", destination),
 	srcFolder = path.join(process.cwd(), "tools/template/" + tpl);

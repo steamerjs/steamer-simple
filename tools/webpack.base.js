@@ -62,7 +62,8 @@ var baseConfig = {
     resolve: {
         modules: [
             configWebpack.path.src,
-            "node_modules"
+            "node_modules",
+            path.join(configWebpack.path.src, "css/sprites")
         ],
         extensions: [".js", ".jsx", ".css", ".scss", ".less", ".styl", ".png", ".jpg", ".jpeg", ".ico", ".ejs", ".pug", ".handlebars", "swf"],
         alias: {
@@ -107,27 +108,46 @@ configWebpack.static.forEach((item) => {
 });
 
 configWebpack.sprites.forEach(function(sprites) {
-    let style = configWebpack.spriteStyle;
+    let style = configWebpack.spriteStyle,
+        extMap = {
+            stylus: "styl",
+            less: "less"
+        },
+        spriteMode = configWebpack.spriteMode,
+        retinaTpl = (spriteMode === "retinaonly")? "_retinaonly" : "";
 
-    baseConfig.plugins.push(new SpritesmithPlugin({
+
+    let spritesConfig = {
         src: {
             cwd: sprites.path,
             glob: '*.png'
         },
         target: {
             image: path.join(configWebpack.path.src, "css/sprites/" + sprites.key + ".png"),
-            css: path.join(configWebpack.path.src, "css/sprites/" + sprites.key + "." + style)
+            css: path.join(configWebpack.path.src, "css/sprites/" + sprites.key + "." + extMap[style]),
         },
         spritesmithOptions: {
             padding: 10
         },
-        customTemplates: {
-            [style]: path.join(__dirname, '../tools/', './sprite-template/' + style + '.template.' + configWebpack.spriteMode + '.handlebars'),
-        },
         apiOptions: {
-            cssImageRef: sprites.key + ".png"
+            cssImageRef: "~" + sprites.key + ".png"
         }
-    }));
+    };
+
+    if (spriteMode === "retinaonly") {
+        spritesConfig.customTemplates = {
+            [style]: path.join(__dirname, '../tools/', './sprite-template/' + style + retinaTpl + '.template.handlebars')
+        };
+    }
+    else {
+        spritesConfig.cssTemplate = style + retinaTpl + ".template.handlebars";
+    }
+
+    if (spriteMode === "retina") {
+        spritesConfig.retina = "@2x";
+    }
+
+    baseConfig.plugins.push(new SpritesmithPlugin(spritesConfig));
 });
 
 var userConfig = {

@@ -64,10 +64,10 @@ var config = {
         // 是否启用css模块化
         cssModule: false,
 
-        // 合图，mobile = 2倍图，pc = 1倍图
-        spriteMode: "mobile",
+        // 合图，normal (1x) , retinaonly (2x), retina (1x & 2x), 
+        spriteMode: "retina",
         // less, stylus
-        spriteStyle: "less",
+        spriteStyle: "stylus",
 
         // html模板
         template: [
@@ -244,7 +244,15 @@ config.custom = {
                             }
                         },
                         { loader: 'postcss-loader' },
-                        { loader:  'stylus-loader' },
+                        { 
+                            loader:  'stylus-loader',
+                            options: {
+                                paths: [
+                                    config.webpack.path.src,
+                                    "node_modules"
+                                ]
+                            }
+                        },
                     ]
                 }),
             },

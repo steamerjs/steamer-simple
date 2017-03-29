@@ -75,19 +75,20 @@ To change `display` (e.g. `display: inline-block;`), we suggest using a common C
 {{#block "sprite-functions"}}
 {{#if options.functions}}
 spriteWidth($sprite) {
-  width: $sprite[4];
+  width: ($sprite[4]/2);
 }
 
 spriteHeight($sprite) {
-  height: $sprite[5];
+  height: ($sprite[5]/2);
 }
 
 spritePosition($sprite) {
-  background-position: $sprite[2] $sprite[3];
+  background-position: ($sprite[2]/2) ($sprite[3]/2);
 }
 
 spriteImage($sprite) {
   background-image: url($sprite[8]);
+  background-size ($sprite[6]/2) auto;
 }
 
 sprite($sprite) {

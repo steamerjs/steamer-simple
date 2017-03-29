@@ -1,6 +1,9 @@
 # steamer-simple
 一个基础而无框架的脚手架
 
+[![NPM Version](https://img.shields.io/npm/v/steamer-simple.svg?style=flat)](https://www.npmjs.com/package/steamer-simple)
+[![Deps](https://david-dm.org/SteamerTeam/steamer-simple.svg)](https://david-dm.org/SteamerTeam/steamer-simple)
+
 ## 如何使用
 
 * 直接从github clone 下来

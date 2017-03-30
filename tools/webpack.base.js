@@ -104,6 +104,8 @@ configWebpack.static.forEach((item) => {
     }]));
 });
 
+configWebpack.sprites = (configWebpack.spriteMode === "none") ? [] : configWebpack.sprites;
+
 configWebpack.sprites.forEach(function(sprites) {
     let style = configWebpack.spriteStyle,
         extMap = {

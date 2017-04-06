@@ -112,8 +112,13 @@ configWebpack.sprites.forEach(function(sprites) {
             stylus: "styl",
             less: "less"
         },
-        spriteMode = configWebpack.spriteMode,
-        retinaTpl = (spriteMode === "retinaonly")? "_retinaonly" : "";
+        spriteMode = (!!~sprites.key.indexOf('_retina')) ? "retinaonly" : configWebpack.spriteMode,
+        retinaTplMap = {
+            retinaonly: "_retinaonly",
+            "normal": "",
+            "retina": "_retina",
+        },
+        retinaTpl = retinaTplMap[spriteMode] || "";
 
 
     let spritesConfig = {
@@ -135,11 +140,13 @@ configWebpack.sprites.forEach(function(sprites) {
 
     if (spriteMode === "retinaonly") {
         spritesConfig.customTemplates = {
-            [style]: path.join(__dirname, '../tools/', './sprite-template/' + style + retinaTpl + '.template.handlebars')
+            [sprites.key]: path.join(__dirname, '../tools/', './sprite-template/' + style + retinaTpl + '.template.handlebars')
         };
     }
     else {
-        spritesConfig.cssTemplate = style + retinaTpl + ".template.handlebars";
+        spritesConfig.customTemplates = {
+            [sprites.key]: path.join(__dirname, '../node_modules/', './spritesheet-templates/lib/templates/' + style + retinaTpl + '.template.handlebars')
+        };
     }
 
     if (spriteMode === "retina") {

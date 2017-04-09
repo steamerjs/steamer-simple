@@ -45,11 +45,20 @@ var baseConfig = {
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
-                loader: "url-loader",
-                options: {
-                    limit: 1000,
-                    name: "img/[path]/" + configWebpack.hashName + ".[ext]"
-                },
+                loaders: [
+                    {
+                        loader: "url-loader",
+                        options: {
+                            limit: 1000,
+                        },
+                    },
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: "img/[path]/" + configWebpack.hashName + ".[ext]"
+                        }
+                    },
+                ]
             },
             {
                 test: /\.ico$/,
@@ -213,6 +222,29 @@ configWebpack.template.forEach((tpl) => {
 });
 
 if (isProduction) {
+    // 生产环境下图片压缩
+    baseConfig.module.rules[1].loaders.push(
+        {
+            loader: 'image-webpack-loader',
+            options: {
+                gifsicle: {
+                    interlaced: false,
+                },
+                optipng: {
+                    optimizationLevel: 7,
+                },
+                pngquant: {
+                    quality: '65-90',
+                    speed: 4
+                },
+                mozjpeg: {
+                    progressive: true,
+                    quality: 65
+                }
+            }
+        }
+    );
+
     baseConfig.plugins.push(new webpack.DefinePlugin(configWebpack.injectVar));
     baseConfig.plugins.push(new WebpackMd5Hash());
 

@@ -196,6 +196,7 @@ var templateRules = {
 };
 
 configWebpack.style.forEach((style) => {
+    style = (style === 'scss') ? 'sass' : style;
     let rule = styleRules[style] || '';
     rule && baseConfig.module.rules.push(rule);
 });

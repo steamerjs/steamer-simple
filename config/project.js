@@ -57,7 +57,7 @@ var config = {
             production: false,
         },
 
-        // 预编译器，默认支持css 和 less. sass 和 stylus 由npm-install-webpack-plugin自动安装
+        // 预编译器，默认支持css 和 less. sass, scss 和 stylus 由npm-install-webpack-plugin自动安装
         style: [
             "css", "less"
         ],

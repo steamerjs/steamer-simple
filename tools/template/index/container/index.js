@@ -1,5 +1,4 @@
 import "./index.less";
-import "./index.styl";
 
-const tmpl = require('./index.handlebars');
-$('#pages').html(tmpl({text: 'hello world!'}));
+const tmpl = require('./template.html');
+$('#pages').html(tmpl);

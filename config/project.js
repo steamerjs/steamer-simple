@@ -71,9 +71,9 @@ var config = {
         // 默认支持less. sass, scss 和 stylus 由npm-install-webpack-plugin自动安装
         spriteStyle: "less",
 
-        // html 模板. 默认支持html 和 handlebars 和 pug 由npm-install-webpack-plugin自动安装
+        // html 模板. 默认支持html 和 ejs, handlebars 和 pug 由npm-install-webpack-plugin自动安装
         template: [
-            "html"
+            "html",
         ],
 
         // 生产环境下资源是否压缩

@@ -59,7 +59,7 @@ var config = {
 
         // 预编译器，默认支持css 和 less. sass 和 stylus 需要用 npm run loader 安装
         style: [
-            "css", "less", "stylus", "sass"
+            "css", "less"
         ],
         // 生产环境是否提取css
         extractCss: true,
@@ -67,7 +67,7 @@ var config = {
         cssModule: false,
 
         // 合图，normal (仅1倍图) , retinaonly (仅2倍图), retina (包括1倍及2倍图), none (不使用合图)
-        spriteMode: "retina",
+        spriteMode: "none",
         // 默认支持less. sass, scss 和 stylus 需要用 npm run loader 安装
         spriteStyle: "less",
 

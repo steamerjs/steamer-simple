@@ -35,24 +35,6 @@ module.exports = {
             name: 'route',
             message: 'development server directory(/news/)',
             default: '/news/',
-        },
-        {
-            type: 'checkbox',
-            name: 'css',
-            message: 'which style loader do you like [css and less included]',
-            choices: ['sass', 'stylus'],
-        },
-        {
-            type: 'checkbox',
-            name: 'html',
-            message: 'which html loader do you like [html included]',
-            choices: ['pug', 'handlebars'],
         }
-    ],
-    prescript: [
-        
-    ],
-    postscript: [
-        'npm run template'
-    ],
+    ]
 };

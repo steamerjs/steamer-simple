@@ -17,6 +17,7 @@ var Clean = require('clean-webpack-plugin'),
     CopyWebpackPlugin = require("copy-webpack-plugin-hash"),
     SpritesmithPlugin = require('webpack-spritesmith'),
     WebpackMd5Hash = require('webpack-md5-hash'),
+    ExtractTextPlugin = require("extract-text-webpack-plugin"),
     UglifyJsParallelPlugin = require('webpack-uglify-parallel');
 
 var baseConfig = {
@@ -34,7 +35,6 @@ var baseConfig = {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 options: {
-                    // verbose: false,
                     cacheDirectory: './.webpack_cache/',
                     presets: [
                         ["es2015", {"loose": true}],
@@ -75,6 +75,134 @@ var baseConfig = {
     devtool: isProduction ? configWebpack.sourceMap.production : configWebpack.sourceMap.development
 };
 
+// 样式loader
+var styleRules = {
+    css: {
+        test: /\.css$/,
+        // 单独抽出样式文件
+        loader: ExtractTextPlugin.extract({
+            fallback: 'style-loader', 
+            use: [
+                {
+                    loader: 'css-loader',
+                    options: {
+                        localIdentName: '[name]-[local]-[hash:base64:5]',
+                        root: config.webpack.path.src,
+                        module: config.webpack.cssModule,
+                        autoprefixer: true,
+                    }
+                },
+                { loader: 'postcss-loader' },
+            ]
+        }),
+        include: path.resolve(config.webpack.path.src)
+    },
+    less: {
+        test: /\.less$/,
+        loader: ExtractTextPlugin.extract({
+            fallback: 'style-loader', 
+            use: [
+                {
+                    loader: 'css-loader',
+                    options: {
+                        localIdentName: '[name]-[local]-[hash:base64:5]',
+                        module: config.webpack.cssModule,
+                        autoprefixer: true,
+                    }
+                },
+                { loader: 'postcss-loader' },
+                {
+                    loader:  'less-loader',
+                    options: {
+                        paths: [
+                            config.webpack.path.src,
+                            "node_modules"
+                        ]
+                    }
+                }
+            ]
+        }),
+    },
+    stylus: {
+        test: /\.styl$/,
+        loader: ExtractTextPlugin.extract({
+            fallback: 'style-loader', 
+            use: [
+                {
+                    loader: 'css-loader',
+                    options: {
+                        localIdentName: '[name]-[local]-[hash:base64:5]',
+                        module: config.webpack.cssModule,
+                        autoprefixer: true,
+                    }
+                },
+                { loader: 'postcss-loader' },
+                { 
+                    loader:  'stylus-loader',
+                    options: {
+                        paths: [
+                            config.webpack.path.src,
+                            "node_modules"
+                        ]
+                    }
+                },
+            ]
+        }),
+    },
+    sass: {
+        test: /\.s(a|c)ss$/,
+        loader: ExtractTextPlugin.extract({
+            fallback: 'style-loader', 
+            use: [
+                {
+                    loader: 'css-loader',
+                    options: {
+                        localIdentName: '[name]-[local]-[hash:base64:5]',
+                        module: config.webpack.cssModule,
+                        autoprefixer: true,
+                    }
+                },
+                { loader: 'postcss-loader' },
+                { 
+                    loader:  'sass-loader',
+                    options: {
+                        includePaths: [
+                            config.webpack.path.src,
+                            "node_modules"
+                        ]
+                    }
+                },
+            ]
+        }),
+    },
+};
+
+// 模板loader
+var templateRules = {
+    html: {
+        test: /\.html$/,
+        loader: 'html-loader'
+    },
+    pug: {
+        test: /\.pug$/, 
+        loader: 'pug-loader'
+    },
+    handlebars: { 
+        test: /\.handlebars$/, 
+        loader: "handlebars-loader" 
+    },  
+};
+
+configWebpack.style.forEach((style) => {
+    let rule = styleRules[style] || '';
+    rule && baseConfig.module.rules.push(rule);
+});
+
+configWebpack.template.forEach((tpl) => {
+    let rule = templateRules[tpl] || '';
+    rule && baseConfig.module.rules.push(rule);
+});
+
 if (isProduction) {
     baseConfig.plugins.push(new webpack.DefinePlugin(configWebpack.injectVar));
     baseConfig.plugins.push(new WebpackMd5Hash());
@@ -110,7 +238,9 @@ configWebpack.sprites.forEach(function(sprites) {
     let style = configWebpack.spriteStyle,
         extMap = {
             stylus: "styl",
-            less: "less"
+            less: "less",
+            sass: "sass",
+            scss: "scss"
         },
         spriteMode = (!!~sprites.key.indexOf('_retina')) ? "retinaonly" : configWebpack.spriteMode,
         retinaTplMap = {
@@ -138,16 +268,9 @@ configWebpack.sprites.forEach(function(sprites) {
         }
     };
 
-    if (spriteMode === "retinaonly") {
-        spritesConfig.customTemplates = {
-            [sprites.key]: path.join(__dirname, '../tools/', './sprite-template/' + style + retinaTpl + '.template.handlebars')
-        };
-    }
-    else {
-        spritesConfig.customTemplates = {
-            [sprites.key]: path.join(__dirname, '../node_modules/', './spritesheet-templates/lib/templates/' + style + retinaTpl + '.template.handlebars')
-        };
-    }
+    spritesConfig.customTemplates = {
+        [sprites.key]: path.join(__dirname, '../node_modules/', './spritesheet-templates-steamer/lib/templates/' + style + retinaTpl + '.template.handlebars')
+    };
 
     if (spriteMode === "retina") {
         spritesConfig.retina = "@2x";

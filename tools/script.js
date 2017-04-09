@@ -1,5 +1,7 @@
 "use strict";
 
+// 用于webpack构建，区分开发与生产环境相关配置
+
 const utils = require('steamer-webpack-utils'),
 	  webpack = require('webpack'),
 	  fs = require('fs');

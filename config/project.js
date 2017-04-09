@@ -185,8 +185,14 @@ config.custom = {
     getModule: function() {
 
         var module = {
-            rules: []
-        };
+            rules: [
+                { 
+                    test: /\.js$/,
+                    loader: 'happypack/loader?id=1',
+                    exclude: /node_modules/,
+                }
+            ]
+        }; 
 
         return module;
     },

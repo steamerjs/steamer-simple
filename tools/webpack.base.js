@@ -44,23 +44,6 @@ var baseConfig = {
                 exclude: /node_modules/,
             },
             {
-                test: /\.(jpe?g|png|gif|svg)$/i,
-                loaders: [
-                    {
-                        loader: "url-loader",
-                        options: {
-                            limit: 1000,
-                        },
-                    },
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: "img/[path]/" + configWebpack.hashName + ".[ext]"
-                        }
-                    },
-                ]
-            },
-            {
                 test: /\.ico$/,
                 loader: "url-loader",
                 options: {
@@ -93,6 +76,7 @@ var baseConfig = {
     devtool: isProduction ? configWebpack.sourceMap.production : configWebpack.sourceMap.development
 };
 
+/************* loaders 处理 *************/
 // 样式loader
 var styleRules = {
     css: {
@@ -221,9 +205,22 @@ configWebpack.template.forEach((tpl) => {
     rule && baseConfig.module.rules.push(rule);
 });
 
+let imageLoader = {
+    test: /\.(jpe?g|png|gif|svg)$/i,
+    loaders: [
+        {
+            loader: "url-loader",
+            query: {
+                limit: 1000,
+                name: "img/[path]/" + configWebpack.hashName + ".[ext]"
+            },
+        },
+    ]
+};
+
 if (isProduction) {
     // 生产环境下图片压缩
-    baseConfig.module.rules[1].loaders.push(
+    imageLoader.loaders.push(
         {
             loader: 'image-webpack-loader',
             options: {
@@ -244,7 +241,12 @@ if (isProduction) {
             }
         }
     );
+}
 
+baseConfig.module.rules.push(imageLoader);
+
+/************* plugins 处理 *************/
+if (isProduction) {
     baseConfig.plugins.push(new webpack.DefinePlugin(configWebpack.injectVar));
     baseConfig.plugins.push(new WebpackMd5Hash());
 
@@ -320,6 +322,7 @@ configWebpack.sprites.forEach(function(sprites) {
     baseConfig.plugins.push(new SpritesmithPlugin(spritesConfig));
 });
 
+/************* base 与 user config 合并 *************/
 var userConfig = {
     output: configCustom.getOutput(),
     module: configCustom.getModule(),

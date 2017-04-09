@@ -57,7 +57,7 @@ var config = {
             production: false,
         },
 
-        // 预编译器，默认支持css 和 less. sass 和 stylus 需要用 npm run loader 安装
+        // 预编译器，默认支持css 和 less. sass 和 stylus 由npm-install-webpack-plugin自动安装
         style: [
             "css", "less"
         ],
@@ -68,10 +68,10 @@ var config = {
 
         // 合图，normal (仅1倍图) , retinaonly (仅2倍图), retina (包括1倍及2倍图), none (不使用合图)
         spriteMode: "none",
-        // 默认支持less. sass, scss 和 stylus 需要用 npm run loader 安装
+        // 默认支持less. sass, scss 和 stylus 由npm-install-webpack-plugin自动安装
         spriteStyle: "less",
 
-        // html 模板. 默认支持html 和 handlebars 和 pug 需要用 npm run loader 安装
+        // html 模板. 默认支持html 和 handlebars 和 pug 由npm-install-webpack-plugin自动安装
         template: [
             "html"
         ],

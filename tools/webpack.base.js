@@ -19,7 +19,7 @@ var Clean = require('clean-webpack-plugin'),
     WebpackMd5Hash = require('webpack-md5-hash'),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     UglifyJsParallelPlugin = require('webpack-uglify-parallel'),
-    NpmInstallPlugin  = require('npm-install-webpack-plugin');
+    NpmInstallPlugin  = require('npm-install-webpack-plugin-steamer');
 
 var baseConfig = {
     context: configWebpack.path.src,

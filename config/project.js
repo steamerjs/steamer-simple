@@ -184,19 +184,37 @@ config.custom = {
     },
 
     // webpack module
-    getModule: function() {
+     getModule: function() {
 
         var module = {
-            // js 使用了 happypack 进行编译，具体 babel 配置参看 happypack 插件的配置
             rules: [
-                { 
-                    test: /\.js$/,
-                    loader: 'happypack/loader?id=1',
-                    exclude: /node_modules/,
-                }
+                
             ]
         }; 
 
+        var jsRule = null;
+
+        if (isProduction) {
+            // js 使用了 happypack 进行编译，具体 babel 配置参看 happypack 插件的配置
+            jsRule = { 
+                test: /\.js$/,
+                loader: 'happypack/loader?id=1',
+                exclude: /node_modules/,
+            };
+        }
+        else {
+            jsRule = { 
+                test: /\.js$/,
+                loader: 'babel-loader',
+                options: {
+                    cacheDirectory: './.webpack_cache/',
+                },
+                exclude: /node_modules/,
+            };
+        }
+
+        module.rules.push(jsRule);
+        
         return module;
     },
 
@@ -216,21 +234,21 @@ config.custom = {
                 },
                 allChunks: false,
                 disable: (isProduction || !config.webpack.extractCss) ? false : true,
-            }),
-            new HappyPack({
+            })
+        ];
+
+        if (isProduction) {
+            plugins.push(new HappyPack({
                 id: '1',
                 verbose: false,
                 loaders: [{
                     path: 'babel-loader',
-                    options: {
+                    option: {
                         cacheDirectory: './.webpack_cache/',
-                        presets: [
-                            ["es2015", {"loose": true}],
-                        ]
                     },
                 }],
-            })
-        ];
+            }));
+        }
         
         config.webpack.html.forEach(function(page, key) {
             plugins.push(new HtmlResWebpackPlugin({

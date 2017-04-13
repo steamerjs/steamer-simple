@@ -115,12 +115,12 @@ var styleRules = {
                 { loader: 'postcss-loader' },
                 {
                     loader:  'less-loader',
-                    options: {
-                        paths: [
-                            config.webpack.path.src,
-                            "node_modules"
-                        ]
-                    }
+                    // options: {
+                    //     paths: [
+                    //         config.webpack.path.src,
+                    //         "node_modules"
+                    //     ]
+                    // }
                 }
             ],
         }),
@@ -141,12 +141,12 @@ var styleRules = {
                 { loader: 'postcss-loader' },
                 { 
                     loader:  'stylus-loader',
-                    options: {
-                        paths: [
-                            config.webpack.path.src,
-                            "node_modules"
-                        ]
-                    }
+                    // options: {
+                    //     paths: [
+                    //         config.webpack.path.src,
+                    //         "node_modules"
+                    //     ]
+                    // }
                 },
             ],
         }),
@@ -167,12 +167,12 @@ var styleRules = {
                 { loader: 'postcss-loader' },
                 { 
                     loader:  'sass-loader',
-                    options: {
-                        includePaths: [
-                            config.webpack.path.src,
-                            "node_modules"
-                        ]
-                    }
+                    // options: {
+                    //     includePaths: [
+                    //         config.webpack.path.src,
+                    //         "node_modules"
+                    //     ]
+                    // }
                 },
             ],
         }),

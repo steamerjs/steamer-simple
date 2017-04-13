@@ -21,7 +21,19 @@ module.exports = {
         {
             type: 'input',
             name: 'cdn',
-            message: 'cdn url(//localhost:8000/)',
+            message: 'common cdn url(//localhost:8000/)',
+            default: "//localhost:8000/",
+        },
+        {
+            type: 'input',
+            name: 'cssCdn',
+            message: 'css cdn url(//localhost:8000/)',
+            default: "//localhost:8000/",
+        },
+        {
+            type: 'input',
+            name: 'imgCdn',
+            message: 'img cdn url(//localhost:8000/)',
             default: "//localhost:8000/",
         },
         {

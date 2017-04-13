@@ -95,7 +95,7 @@ var styleRules = {
                     }
                 },
                 { loader: 'postcss-loader' },
-            ]
+            ],
         }),
         include: path.resolve(config.webpack.path.src)
     },
@@ -122,7 +122,7 @@ var styleRules = {
                         ]
                     }
                 }
-            ]
+            ],
         }),
     },
     stylus: {
@@ -148,7 +148,7 @@ var styleRules = {
                         ]
                     }
                 },
-            ]
+            ],
         }),
     },
     sass: {
@@ -174,7 +174,7 @@ var styleRules = {
                         ]
                     }
                 },
-            ]
+            ],
         }),
     },
 };
@@ -221,9 +221,10 @@ let imageLoader = {
     loaders: [
         {
             loader: "url-loader",
-            query: {
+            options: {
+                publicPath: isProduction ? configWebpack.imgCdn : configWebpack.webserver,
                 limit: 1000,
-                name: "img/[path]/" + configWebpack.hashName + ".[ext]"
+                name: "img/[path]/" + configWebpack.hashName + ".[ext]",
             },
         },
     ]

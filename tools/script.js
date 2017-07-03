@@ -15,10 +15,20 @@ var isProduction = mode === "production";
 if (mode === 'development') {
 	process.env.NODE_ENV = "development";
 
+	const dependency = require('./dependency');
+	if (dependency.installDependency()) {
+		return;
+	}
+
 	require('./server');
 }
 else if (mode === 'production' || mode === 'source'){
 	process.env.NODE_ENV = isProduction ? "production" : "development";
+
+	const dependency = require('./dependency');
+	if (dependency.installDependency()) {
+		return;
+	}
 
 	var compiler = webpack(require('./webpack.base'));
 	compiler.run(function(err, stats) {

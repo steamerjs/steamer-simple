@@ -59,7 +59,7 @@ var config = {
             production: false,
         },
 
-        // 预编译器，默认支持css 和 less. sass, scss 和 stylus 由npm-install-webpack-plugin自动安装
+        // 预编译器，默认支持css 和 less. sass, scss 和 stylus 启动构建时自动安装
         style: [
             "css", "less"
         ],
@@ -73,7 +73,7 @@ var config = {
         // 默认支持less. sass, scss 和 stylus 由npm-install-webpack-plugin自动安装
         spriteStyle: "less",
 
-        // html 模板. 默认支持html 和 ejs, handlebars 和 pug 由npm-install-webpack-plugin自动安装
+        // html 模板. 默认支持html 和 ejs, handlebars 和 pug 启动构建时自动安装
         template: [
             "html",
         ],

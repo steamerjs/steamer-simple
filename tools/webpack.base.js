@@ -19,8 +19,7 @@ var Clean = require('clean-webpack-plugin'),
     SpritesmithPlugin = require('webpack-spritesmith'),
     WebpackMd5Hash = require('webpack-md5-hash'),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
-    UglifyJsParallelPlugin = require('webpack-uglify-parallel'),
-    NpmInstallPlugin  = require('npm-install-webpack-plugin-steamer');
+    UglifyJsParallelPlugin = require('webpack-uglify-parallel');
 
 var baseConfig = {
     context: configWebpack.path.src,
@@ -64,14 +63,6 @@ var baseConfig = {
     },
     plugins: [
         new webpack.NoEmitOnErrorsPlugin(),
-        new NpmInstallPlugin({
-            // Use --save or --save-dev
-            dev: true,
-            // Install missing peerDependencies
-            peerDependencies: true,
-            // Reduce amount of console logging
-            quiet: false,
-        })
     ],
     watch: isProduction ? false : true,
     devtool: isProduction ? configWebpack.sourceMap.production : configWebpack.sourceMap.development

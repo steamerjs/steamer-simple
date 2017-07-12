@@ -146,7 +146,7 @@ module.exports = {
 	copyFile: function(installFile) {
 		Object.keys(installFile.template).forEach((item1) => {
 			let fileArr = files.template[item1] || [];
-			files.template[item1].forEach((item2) => {
+			fileArr.forEach((item2) => {
 				utils.info('file ' + item2.src + ' is copyied to ' + item2.dist);
 				utils.fs.copySync(item2.src, item2.dist);
 			});

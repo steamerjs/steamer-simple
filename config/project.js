@@ -28,6 +28,9 @@ var config = {
     // ========================= webpack环境配置 =========================
     env: __env,
 
+	// 默认使用的npm命令行
+	npm: 'npm',
+
     webpack: {
 
         // ========================= webpack路径与url =========================
@@ -58,6 +61,9 @@ var config = {
             development: "inline-source-map",
             production: false,
         },
+
+	    // javascript 方言，目前仅支持 ts(typescript)
+	    js: [],
 
         // 预编译器，默认支持css 和 less. sass, scss 和 stylus 启动构建时自动安装
         style: [

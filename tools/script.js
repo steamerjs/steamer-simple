@@ -15,8 +15,9 @@ var isProduction = mode === "production";
 if (mode === 'development') {
 	process.env.NODE_ENV = "development";
 
-	const dependency = require('./dependency');
-	if (dependency.installDependency()) {
+	const feature = require('./feature/feature');
+
+	if (feature.installDependency()) {
 		return;
 	}
 
@@ -25,8 +26,9 @@ if (mode === 'development') {
 else if (mode === 'production' || mode === 'source'){
 	process.env.NODE_ENV = isProduction ? "production" : "development";
 
-	const dependency = require('./dependency');
-	if (dependency.installDependency()) {
+	const feature = require('./feature/feature');
+
+	if (feature.installDependency()) {
 		return;
 	}
 

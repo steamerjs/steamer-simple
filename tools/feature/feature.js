@@ -37,7 +37,7 @@ var dependency = {
 			'style-loader': '^0.18.2',
 			'css-loader': '^0.28.4',
 			'less': '^2.7.2',
-			'less-loader': '^4.0.4'
+			'less-loader': '^4.0.5'
 		},
 		sass: {
 			'style-loader': '^0.18.2',

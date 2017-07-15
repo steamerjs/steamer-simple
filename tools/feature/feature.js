@@ -62,8 +62,6 @@ var dependency = {
 		ts: {
 			'awesome-typescript-loader': '^3.2.1',
 			'typescript': '^2.4.1',
-			'@types/react': '^15.0.35',
-			'@types/react-dom': '^15.5.1'
 		}
 	}
 };

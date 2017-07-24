@@ -27,6 +27,9 @@ var HtmlResWebpackPlugin = require('html-res-webpack-plugin'),
 var config = {
     // ========================= webpack环境配置 =========================
     env: __env,
+    
+    // 是否显示开发环境下的生成文件
+    showSource: true,
 
     // 默认使用的npm命令行
     npm: 'npm',

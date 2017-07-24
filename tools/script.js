@@ -1,38 +1,28 @@
-"use strict";
-
-// 用于webpack构建，区分开发与生产环境相关配置
+'use strict';
 
 const utils = require('steamer-webpack-utils'),
 	  webpack = require('webpack'),
 	  fs = require('fs');
 
-var argv = utils.getArgvs(),
-	npmArgv = utils.getArgvs(JSON.parse(process.env.npm_config_argv || "[]").original),
-	mode = argv.mode;
+var isProduction = process.env.NODE_ENV === 'production';
 
-var isProduction = mode === "production";
+const feature = require('./feature/feature');
 
-if (mode === 'development') {
-	process.env.NODE_ENV = "development";
+if (feature.installDependency()) {
+	return;
+}
 
-	const feature = require('./feature/feature');
-
-	if (feature.installDependency()) {
-		return;
-	}
-
+if (!isProduction) {	
 	require('./server');
 }
-else if (mode === 'production' || mode === 'source'){
-	process.env.NODE_ENV = isProduction ? "production" : "development";
+else if (isProduction) {
 
-	const feature = require('./feature/feature');
+	compilerRun(require('./webpack.base'));
+}
 
-	if (feature.installDependency()) {
-		return;
-	}
+function compilerRun(config) {
+	var compiler = webpack(config);
 
-	var compiler = webpack(require('./webpack.base'));
 	compiler.run(function(err, stats) {
 	    if (!err) {
 	        const jsonStats = stats.toJson();
@@ -43,13 +33,14 @@ else if (mode === 'production' || mode === 'source'){
 	            cached: true,
 	            chunks: false, // Makes the dist much quieter
 	            colors: true,
-	            children: false, // supress some plugin output
+	            children: false // supress some plugin output
 	        }));
 
 	        if (jsonStats.errors.length > 0) {
 	            console.log('Webpack compiler encountered errors.');
 	            console.log(jsonStats.errors.join('\n'));
-	        } else if (jsonStats.warnings.length > 0) {
+	        }
+            else if (jsonStats.warnings.length > 0) {
 	            console.log('Webpack compiler encountered warnings.');
 	            console.log(jsonStats.warnings.join('\n'));
 	        }

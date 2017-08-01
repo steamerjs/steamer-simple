@@ -6,7 +6,7 @@
 
 ## 快速启动
 
-* 推荐 >> 使用[steamerjs](https://steamerjs.github.io/steamerjs/docs/How-To-Start.html)安装
+* 推荐 >> 使用[steamerjs](https://steamerjs.github.io/docs/How-To-Start.html)安装
 * 直接从github clone 下来
 
 ```javascript
@@ -30,7 +30,7 @@ npm run dist 或 npm run pub
 ```
 
 ## 如何开始
-[参见文档-项目脚手架](https://steamerjs.github.io/steamerjs/docs/Starterkit.html)
+[参见文档-项目脚手架](https://steamerjs.github.io/docs/Starterkit.html)
 
 
 ## 文章参考

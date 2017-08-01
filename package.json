@@ -1,6 +1,6 @@
 {
   "name": "steamer-simple",
-  "version": "3.0.0-beta.6",
+  "version": "3.0.0-beta.7",
   "description": "alloyteam frameworkless starterkit",
   "main": "./.steamer/steamer-simple.js",
   "scripts": {
@@ -45,7 +45,7 @@
     "babel-preset-es2015": "^6.24.1",
     "browserslist": "^2.2.2",
     "cache-loader": "^1.0.3",
-    "caniuse-db": "^1.0.30000708",
+    "caniuse-db": "^1.0.30000709",
     "clean-webpack-plugin": "^0.1.16",
     "copy-webpack-plugin-hash": "^4.0.5",
     "cross-env": "^5.0.1",
@@ -75,7 +75,7 @@
     "url-loader": "^0.5.9",
     "vconsole": "^2.5.2",
     "webpack": "^3.4.1",
-    "webpack-dev-middleware": "^1.11.0",
+    "webpack-dev-middleware": "^1.12.0",
     "webpack-hot-middleware": "^2.18.2",
     "webpack-md5-hash": "^0.0.5",
     "webpack-merge": "^4.1.0",

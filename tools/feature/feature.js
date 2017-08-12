@@ -59,10 +59,7 @@ var dependency = {
 		}
 	},
 	js: {
-		ts: {
-			'awesome-typescript-loader': '^3.2.1',
-			'typescript': '^2.4.1',
-		}
+		
 	}
 };
 
@@ -70,12 +67,7 @@ var files = {
 	template: {},
 	style: {},
 	js: {
-		ts: [
-			{
-				src: path.join(__dirname, './tsconfig.json'),
-				dist: path.resolve('tsconfig.json')
-			}
-		]
+		
 	}
 };
 

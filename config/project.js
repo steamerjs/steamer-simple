@@ -9,32 +9,27 @@ const path = require('path'),
       __env = process.env.NODE_ENV,
       isProduction = __env === 'production';
 
-var srcPath = path.resolve(__basename, "src"),
-    devPath = path.resolve(__basename, "dev"),
-    distPath = path.resolve(__basename, "dist"),
-    spritePath = path.resolve(__basename, "src/img/sprites");
+var srcPath = path.resolve(__basename, 'src'),
+    devPath = path.resolve(__basename, 'dev'),
+    distPath = path.resolve(__basename, 'dist'),
+    spritePath = path.resolve(__basename, 'src/img/sprites');
 
-var hash = "[hash:6]",
-    chunkhash = "[chunkhash:6]",
-    contenthash = "[contenthash:6]";
-
-var HtmlResWebpackPlugin = require('html-res-webpack-plugin'),
-    ExtractTextPlugin = require("extract-text-webpack-plugin"),
-    HappyPack = require('happypack');
+var hash = '[hash:6]',
+    chunkhash = '[chunkhash:6]',
+    contenthash = '[contenthash:6]';
 
 // ========================= webpack快捷配置 =========================
 // 基本情况下，你只需要关注这里的配置
 var config = {
     // ========================= webpack环境配置 =========================
     env: __env,
-    
-    // 是否显示开发环境下的生成文件
-    showSource: true,
 
     // 默认使用的npm命令行
     npm: 'npm',
 
     webpack: {
+
+        useCdn: true,  // 是否使用webserver, cdn 分离 html 与其它静态资源
 
         // ========================= webpack路径与url =========================
         // 项目路径
@@ -43,8 +38,8 @@ var config = {
             dev: devPath,
             dist: distPath,
             sprite: spritePath,
-            distCdn: "cdn", // 生成cdn的目录，dist/cdn
-            distWebserver: "../webserver" // 生成webserver的目录, dist/webserver， 目录相对于 distCdn
+            distCdn: '', // 生成cdn的目录，dist/cdn
+            distWebserver: '' // 生成webserver的目录, dist/webserver， 目录相对于 distCdn
         },
 
         // ========================= webpack服务器及路由配置 =========================
@@ -54,9 +49,18 @@ var config = {
         cssCdn: steamerConfig.cssCdn || steamerConfig.cdn,
         imgCdn: steamerConfig.imgCdn || steamerConfig.cdn,
         port: steamerConfig.port,    // port for local server
-        route: steamerConfig.route, // http://host/news/
+        route: [], // proxy route, 例如: /news/
+
+        "api-port": steamerConfig["api-port"] || 6800, // 后台转发端口
+        "api-route": steamerConfig["api-route"] || [], // 后台转发路径
 
         // ========================= webpack自定义配置 =========================
+        // 是否显示开发环境下的生成文件
+        showSource: true,
+
+        // 是否在生产环境下生成manifest文件
+        manifest: false,
+
         // 是否清理生成文件夹
         clean: true,
         // sourcemap
@@ -65,27 +69,30 @@ var config = {
             production: false,
         },
 
-         // javascript 方言，目前仅支持 ts(typescript)
+        // javascript 方言，即将支持ts(typescript)
         js: [],
 
-        // 预编译器，默认支持css 和 less. sass, scss 和 stylus 启动构建时自动安装
+        // 预编译器，默认支持css 和 less. sass, scss 和 stylus 由npm-install-webpack-plugin自动安装
         style: [
-            "css", "less"
+            'css', 'less',
         ],
         // 生产环境是否提取css
         extractCss: true,
         // 是否启用css模块化
         cssModule: false,
 
-        // 合图，normal (仅1倍图) , retinaonly (仅2倍图), retina (包括1倍及2倍图), none (不使用合图)
-        spriteMode: "none",
+        // 合图，none (无合图), normal (仅1倍图) , retinaonly (仅2倍图), retina (包括1倍及2倍图)
+        spriteMode: 'retinaonly',
         // 默认支持less. sass, scss 和 stylus 由npm-install-webpack-plugin自动安装
-        spriteStyle: "less",
+        spriteStyle: 'less',
 
-        // html 模板. 默认支持html 和 ejs, handlebars 和 pug 启动构建时自动安装
+        // html 模板. 默认支持html 和 ejs, handlebars 和 pug 由npm-install-webpack-plugin自动安装
         template: [
-            "html",
+            'html'
         ],
+
+        // 是否注入es6-promise包
+        promise: false,
 
         // 生产环境下资源是否压缩
         compress: true,
@@ -93,14 +100,14 @@ var config = {
         // 不经webpack打包的资源
         static: [
             {
-                src: "libs/",
+                src: 'libs/',
                 hash: true,
             }
         ],
 
         // 利用DefinePlugin给应用注入变量
         injectVar: {
-            "process.env": {
+            'process.env': {
                 NODE_ENV: JSON.stringify(__env)
             }
         },
@@ -108,55 +115,55 @@ var config = {
         // webpack resolve.alias 包别名
         alias: {
             'utils': path.join(srcPath, '/js/common/utils'),
-            'sutils': 'steamer-browserutils/index',
+            'sutils': 'steamer-browserutils/simple',
         },
 
         // 文件名与哈希, hash, chunkhash, contenthash 与webpack的哈希配置对应
         hash: hash,
         chunkhash: chunkhash,
         contenthash: contenthash,
-        hashName: isProduction ? ("[name]-" + hash) : "[name]",
-        chunkhashName: isProduction ? ("[name]-" + chunkhash) : "[name]",
-        contenthashName: isProduction ? ("[name]-" + contenthash) : "[name]",
+        hashName: isProduction ? ('[name]-' + hash) : '[name]',
+        chunkhashName: isProduction ? ('[name]-' + chunkhash) : '[name]',
+        contenthashName: isProduction ? ('[name]-' + contenthash) : '[name]',
 
         // ========================= webpack entry配置 =========================
         // 根据约定，自动扫描js entry，约定是src/page/xxx/main.js 或 src/page/xxx/main.jsx
-        /** 
+        /**
             获取结果示例
             {
-                'js/index': [path.join(configWebpack.path.src, "/page/index/main.js")],
-                'js/spa': [path.join(configWebpack.path.src, "/page/spa/main.js")],
-                'js/pindex': [path.join(configWebpack.path.src, "/page/pindex/main.jsx")],
+                'js/simple': [path.join(configWebpack.path.src, '/page/simple/main.js')],
+                'js/spa': [path.join(configWebpack.path.src, '/page/spa/main.js')],
+                'js/pindex': [path.join(configWebpack.path.src, '/page/pindex/main.jsx')],
             }
          */
         entry: utils.filterJsFileByCmd(utils.getJsEntry({
-            srcPath: path.join(srcPath, "page"), 
-            fileName: "main",
-            extensions: ["js", "jsx"],
-            keyPrefix: "js/",
+            srcPath: path.join(srcPath, 'page'),
+            fileName: 'main',
+            extensions: ['js', 'jsx'],
+            keyPrefix: 'js/',
             level: 1
         })),
 
         // 自动扫描html，配合html-res-webpack-plugin
         /**
             获取结果示例
-            [ 
-                { 
-                    key: 'index',
-                    path: 'path/src/page/index/index.html'
+            [
+                {
+                    key: 'simple',
+                    path: 'path/src/page/simple/simple.html'
                 },
-                { 
+                {
                     key: 'spa',
-                    path: 'path/src/page/spa/index.html'
+                    path: 'path/src/page/spa/simple.html'
                 },
-                { 
+                {
                     key: 'pindex',
-                    path: 'path/src/page/pindex/index.html'
-                } 
+                    path: 'path/src/page/pindex/simple.html'
+                }
             ]
          */
         html: utils.filterHtmlFileByCmd(utils.getHtmlEntry({
-            srcPath: path.join(srcPath, "page"),
+            srcPath: path.join(srcPath, 'page'),
             level: 1
         })),
 
@@ -164,14 +171,14 @@ var config = {
         /**
             获取结果示例
             [
-                { 
+                {
                     key: 'btn',
                     path: 'path/src/img/sprites/btn'
                 },
-                { 
+                {
                     key: 'list',
                     path: 'path/src/img/sprites/list'
-                } 
+                }
             ]
          */
         sprites: utils.getSpriteEntry({
@@ -193,46 +200,12 @@ config.custom = {
     },
 
     // webpack module
-     getModule: function() {
+    getModule: function() {
 
         var module = {
-            rules: [
-                
-            ]
-        }; 
+            rules: []
+        };
 
-        var jsRule = null;
-
-        if (isProduction) {
-            // js 使用了 happypack 进行编译，具体 babel 配置参看 happypack 插件的配置
-            jsRule = { 
-                test: /\.js$/,
-                loader: 'happypack/loader?id=1',
-                exclude: /node_modules/,
-            };
-        }
-        else {
-            jsRule = { 
-                test: /\.js$/,
-                use: [
-                    {
-                        loader: "cache-loader",
-                        options: {
-                            // provide a cache directory where cache items should be stored
-                            cacheDirectory: path.resolve(".cache")
-                        }
-                    },
-                    {
-                        loader: "babel-loader",
-                        options: {},
-                    },
-                ],
-                exclude: /node_modules/,
-            };
-        }
-
-        module.rules.push(jsRule);
-        
         return module;
     },
 
@@ -245,51 +218,15 @@ config.custom = {
 
     // webpack plugins
     getPlugins: function() {
-        var plugins = [
-            new ExtractTextPlugin({
-                filename:  (getPath) => {
-                  return getPath('css/' + config.webpack.contenthashName + '.css').replace('css/js', 'css');
-                },
-                allChunks: true,
-                disable: (isProduction || !config.webpack.extractCss) ? false : true,
-            })
-        ];
-
-        if (isProduction) {
-            plugins.push(new HappyPack({
-                id: '1',
-                verbose: false,
-                loaders: [{
-                    path: 'babel-loader',
-                    options: {
-                        cacheDirectory: './.cache/',
-                    },
-                }],
-            }));
-        }
-        
-        config.webpack.html.forEach(function(page, key) {
-            plugins.push(new HtmlResWebpackPlugin({
-                mode: "html",
-                filename: isProduction ? (config.webpack.path.distWebserver + "/" + page.key + ".html") : page.key + ".html",
-                template: page.path,
-                favicon: "src/favicon.ico",
-                htmlMinify: null,
-                entryLog: !key ? true : false,
-                cssPublicPath: isProduction ? config.webpack.cssCdn : config.webpack.webserver,
-                templateContent: function(tpl) {
-                    return tpl;
-                }
-            }));
-        }); 
+        var plugins = [];
 
         return plugins;
     },
-        
+
     // webpack externals
     getExternals: function() {
         return {
-            '$': "zepto",
+            '$': 'zepto'
         };
     },
 
@@ -303,8 +240,8 @@ config.custom = {
 config.webpackMerge = {
     // webpack-merge smartStrategy 配置
     smartStrategyOption: {
-        "module.rules": "prepend",
-        "plugins": "append"
+        'module.rules': 'append',
+        'plugins': 'append'
     },
 
     // 在smartStrategy merge 之前，用户可以先行对 webpack.base.js 的配置进行处理

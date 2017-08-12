@@ -10,7 +10,7 @@ module.exports = {
         ".stylelintignore",
         "postcss.config.js",
         ".gitignore",
-        ".babelrc",
+        ".babelrc"
     ],
     options: [
         {
@@ -30,12 +30,6 @@ module.exports = {
             name: 'port',
             message: 'development server port(9000)',
             default: '9000',
-        },
-        {
-            type: 'input',
-            name: 'route',
-            message: 'development server directory(/news/)',
-            default: '/news/',
         }
     ]
 };

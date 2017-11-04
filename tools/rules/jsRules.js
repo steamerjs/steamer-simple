@@ -1,26 +1,23 @@
-`use strict`;
-
-const path = require('path');
 
 module.exports = function(config) {
 
-	var configWebpack = config.webpack;
+    let configWebpack = config.webpack;
 
-	// js方言
-	const jsRules = {};
+    // js方言
+    const jsRules = {};
 
-	var rules = [
-	    {
-	    	test: /\.js$/,
+    let rules = [
+        {
+            test: /\.js$/,
             loader: 'happypack/loader?id=1',
             exclude: /node_modules/
-	    }
-	];
+        }
+    ];
 
-	configWebpack.js.forEach((tpl) => {
-	    let rule = jsRules[tpl] || '';
-	    rule && rules.push(rule);
-	});
+    configWebpack.js.forEach((tpl) => {
+        let rule = jsRules[tpl] || '';
+        rule && rules.push(rule);
+    });
 
-	return rules;
+    return rules;
 };

@@ -1,14 +1,13 @@
 module.exports = {
     "env": {},
     "extends": [
-        "@alloyteam/eslint-config-standard",
+        "eslint-config-alloy",
     ],
     "plugins": [],
     "rules": {
-        "no-mixed-operators": 0,
+        'one-var': 'off'
     },
     "globals": {
-        "define": true,
-        "$": true,
+        "$": true
     }
 };

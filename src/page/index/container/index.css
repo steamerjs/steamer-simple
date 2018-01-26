@@ -1,4 +1,6 @@
-@import "css/sprites/btn.css";
+@import "css/common/common";
+@import "css/common/reset";
+@import "css/sprites/btn";
 
 div {
     margin: 0 auto;

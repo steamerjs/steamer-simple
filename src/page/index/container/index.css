@@ -1,9 +1,0 @@
-@import "css/common/common";
-@import "css/common/reset";
-@import "css/sprites/btn";
-
-div {
-    margin: 0 auto;
-    display: flex;
-    text-align: center;
-}

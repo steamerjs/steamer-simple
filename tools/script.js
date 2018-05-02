@@ -12,6 +12,7 @@ if (!isProduction) {
     require('./server');
 }
 else if (isProduction) {
+
     compilerRun(require('./webpack.base'));
 }
 
@@ -22,12 +23,14 @@ function compilerRun(config) {
         if (!err) {
             console.log(stats.toString({
                 assets: true,
-                cached: true,
+                cached: false,
                 colors: true,
                 children: false,
                 errors: true,
                 warnings: true,
                 version: true,
+                modules: false,
+                publicPath: true,
             }));
         }
         else {

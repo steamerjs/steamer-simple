@@ -18,14 +18,14 @@ module.exports = function(config) {
         },
         ejs: {
             test: /\.ejs$/,
-            loader: 'ejs-compiled-loader',
+            loader: 'ejs-loader',
             query: {
-                'htmlmin': true, // or enable here  
+                'htmlmin': true, // or enable here
                 'htmlminOptions': {
                     removeComments: true
                 }
             }
-        }
+        },
     };
 
     let rules = [];

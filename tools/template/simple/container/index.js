@@ -1,4 +1,4 @@
-import './index.css';
+import './index.less';
 
 const tmpl = require('./template.html');
 

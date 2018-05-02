@@ -85,7 +85,7 @@ let config = {
         // 合图，none (无合图), normal (仅1倍图) , retinaonly (仅2倍图), retina (包括1倍及2倍图)
         spriteMode: 'retinaonly',
         // 默认支持less. sass, scss 和 stylus，会自动安装
-        spriteStyle: 'css',
+        spriteStyle: 'less',
 
         // html 模板. 默认支持html 和 ejs, handlebars 和 pug，会自动安装
         template: [

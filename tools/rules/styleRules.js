@@ -31,7 +31,6 @@ module.exports = function(config) {
                 autoprefixer: true,
                 minimize: true,
                 sourceMap: configWebpack.cssSourceMap,
-                // includePaths: includePaths,
                 importLoaders: 2
             }
         },

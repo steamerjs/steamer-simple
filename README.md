@@ -9,14 +9,12 @@
 * 推荐 >> 使用[steamerjs](https://steamerjs.github.io/docs/projectkits/Bootstrap.html)安装
 
 ```javascript
-
+// 安装 steamerjs，已经内置 steamer-plugin-kit
 npm i -g steamerjs
-
-// 安装脚手架到全局
-steamer kit -add https://github.com/steamerjs/steamer-simple.git
-
+// 下载脚手架到全局
+steamer kit --add https://github.com/steamerjs/steamer-simple.git
+// 基于脚手架初始化项目
 steamer kit
-// 然后从列表中选择
 ```
 
 * 直接从github clone 下来

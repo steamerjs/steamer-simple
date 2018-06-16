@@ -10,11 +10,13 @@
 
 ```javascript
 
-npm i -g steamerjs steamer-plugin-kit
+npm i -g steamerjs
 
-npm i -g steamer-simple
+// 安装脚手架到全局
+steamer kit -add https://github.com/steamerjs/steamer-simple.git
 
 steamer kit
+// 然后从列表中选择
 ```
 
 * 直接从github clone 下来

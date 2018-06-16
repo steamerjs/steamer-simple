@@ -1,6 +1,6 @@
 {
   "name": "steamer-simple",
-  "version": "4.0.0-beta.3",
+  "version": "4.0.0-beta.4",
   "description": "alloyteam frameworkless starterkit",
   "main": "./.steamer/steamer-simple.js",
   "scripts": {
